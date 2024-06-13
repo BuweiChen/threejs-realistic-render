@@ -85,6 +85,9 @@ scene.add(floor)
 
 floor.rotation.x = - Math.PI * 0.5
 
+floorColorTexture.colorSpace = THREE.SRGBColorSpace
+
+
 const wallColorTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_diff_1k.jpg')
 const wallNormalTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_nor_gl_1k.png')
 const wallAORoughnessMetalnessTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_arm_1k.jpg')
@@ -102,6 +105,20 @@ const wall = new THREE.Mesh(
 wall.position.y = 4
 wall.position.z = - 4
 scene.add(wall)
+
+wallColorTexture.colorSpace = THREE.SRGBColorSpace
+
+gltfLoader.load(
+    '/models/hamburger.glb',
+    (gltf) =>
+    {
+        gltf.scene.scale.set(0.4, 0.4, 0.4)
+        gltf.scene.position.set(0, 7.5, 0)
+        scene.add(gltf.scene)
+
+        updateAllMaterials()
+    }
+)
 
 /**
  * Sizes
@@ -146,12 +163,18 @@ controls.enableDamping = true;
 /**
  * Directional light
  */
+
+
+
 const directionalLight = new THREE.DirectionalLight('#ffffff', 6)
 directionalLight.position.set(- 4, 6.5, 2.5)
+directionalLight.shadow.camera.top = 10
 scene.add(directionalLight)
 directionalLight.castShadow = true
 directionalLight.shadow.camera.far = 15
 directionalLight.shadow.mapSize.set(512, 512)
+directionalLight.shadow.normalBias = 0.027
+directionalLight.shadow.bias = - 0.004
 gui.add(directionalLight, 'castShadow')
 // Helper
 const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
